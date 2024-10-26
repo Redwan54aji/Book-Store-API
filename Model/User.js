@@ -1,7 +1,7 @@
 const joi = require('joi')
 const mongoose = require('mongoose');
 const JWT = require("jsonwebtoken")
-
+const passwordcomplexity = require('joi-password-complexity')
 //User schema
 
 const userSchema = new mongoose.Schema({
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
 })
 //Generate Token
 userSchema.methods.generateToken = function () {
-   return JWT.sign({
+    return JWT.sign({
         id: this._id,
         isAdmin: this.isAdmin
     }, process.env.key)
@@ -45,7 +45,7 @@ function validateRegisterUser(obj) {
     const schame = joi.object({
         email: joi.string().trim().min(5).max(100).required().email(),
         username: joi.string().trim().min(2).max(200).required(),
-        password: joi.string().trim().min(2).required(),
+        password: passwordcomplexity().required(),
     })
     return schame.validate(obj)
 }
@@ -53,6 +53,13 @@ function validateRegisterUser(obj) {
 function validateLoginUser(obj) {
     const schame = joi.object({
         email: joi.string().trim().min(5).max(100).required().email(),
+        password: joi.string().trim().min(2).required(),
+    })
+    return schame.validate(obj)
+}
+
+function validatChangPassword(obj) {
+    const schame = joi.object({
         password: joi.string().trim().min(2).required(),
     })
     return schame.validate(obj)
@@ -73,4 +80,5 @@ module.exports = {
     validateLoginUser,
     validateRegisterUser,
     validateUodateUser,
+    validatChangPassword
 }

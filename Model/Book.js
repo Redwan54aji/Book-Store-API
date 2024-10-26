@@ -1,7 +1,7 @@
 const joi = require('joi')
 const mongoose = require('mongoose');
 //mongoose.connect('mongodb://127.0.0.1:27017/techers and autors');
-const TecherSchema = new mongoose.Schema({
+const BookSchema = new mongoose.Schema({
         title: {
             type: String,
             required: true,
@@ -61,7 +61,7 @@ function validateUpdateBook(obj) {
     return schame.validate(obj)
 }
 
-const Book = mongoose.model('Book', TecherSchema);
+const Book = mongoose.model('Book', BookSchema);
 module.exports = {
     Book,
     validateCreateBook,
